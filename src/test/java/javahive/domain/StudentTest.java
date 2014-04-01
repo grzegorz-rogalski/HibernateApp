@@ -34,7 +34,7 @@ public class StudentTest {
     @Inject
     Finder finder;
     @Inject
-    RepozytoriumStudentImpl rsi;
+    RepozytoriumStudentImpl repozytoriumStudentImpl;
     
     @Test
     public void powinienZwrocic10Studentow() {
@@ -74,8 +74,8 @@ public class StudentTest {
     @Test
     public void test_LiczStudPoNazwisku_JPQLvsHQL(){
     	//given
-	    	List<Student> listaStudentow_HQL  = rsi.getStudenciPoNazwisku_HQL(NAZWISKO);
-	    	List<Student> listaStudentow_JPQL = rsi.getStudenciPoNazwisku_JPQL(NAZWISKO);
+	    	List<Student> listaStudentow_HQL  = repozytoriumStudentImpl.getStudenciPoNazwisku_HQL(NAZWISKO);
+	    	List<Student> listaStudentow_JPQL = repozytoriumStudentImpl.getStudenciPoNazwisku_JPQL(NAZWISKO);
 	   	//when
 	    	int iloscStud_HQL = listaStudentow_HQL.size();
 	    	int iloscStud_JPQL= listaStudentow_JPQL.size();
@@ -86,7 +86,7 @@ public class StudentTest {
     //ZADANIE - wypełnić
     @Ignore
     @Test
-    public void test_LiczStudPoNazwisku_JPQLvsCRITERIA(){
+    public void sprawdzLiczbeStudentowPoNazwiskuJPQLvsCRITERIA(){
     	//given
     	//when
     	//then
@@ -94,14 +94,14 @@ public class StudentTest {
     }   
     @Ignore
     @Test
-    public void test_LiczStudPoNazwisku_CRITERIAvsHQL(){
+    public void sprawdzLiczbeStudentowPoNazwiskuCRITERIAvsHQL(){
     	//given
     	//when
     	//then    	
     }
     @Ignore
     @Test
-    public void test_Projekcji_StudentRosnacoPoNumerzeIndeksu(){
+    public void powinienZwrocicProjekcjaStudentowRosnacoPoNumerzeIndeksu(){
     	//given
     	
     	//when
