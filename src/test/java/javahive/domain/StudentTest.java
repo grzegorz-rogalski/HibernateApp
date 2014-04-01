@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class StudentTest {
     public static final int LICZBA_STUDENTOW_W_YAML = 10;
     public static final String NAZWISKO = "Nowak";
+    public static final String FRAGMENT_NAZWISKA = "a";
+    
     @PersistenceContext
     private EntityManager entityManager;
     @Inject
@@ -70,17 +72,18 @@ public class StudentTest {
         //then
         	assertThat(rozmiarListyOcen, Matchers.greaterThan(0));
     }
-
+    
+    //Testy porównujące JPQL/HQL/CRITERIA
     @Test
-    public void test_LiczStudPoNazwisku_JPQLvsHQL(){
+    public void test_LiczStudPoNazwiskuJPQLvsHQL(){
     	//given
-	    	List<Student> listaStudentow_HQL  = repozytoriumStudentImpl.getStudenciPoNazwisku_HQL(NAZWISKO);
-	    	List<Student> listaStudentow_JPQL = repozytoriumStudentImpl.getStudenciPoNazwisku_JPQL(NAZWISKO);
+	    	List<Student> listaStudentowHQL  = repozytoriumStudentImpl.getStudenciPoNazwisku_HQL(NAZWISKO);
+	    	List<Student> listaStudentowJPQL = repozytoriumStudentImpl.getStudenciPoNazwisku_JPQL(NAZWISKO);
 	   	//when
-	    	int iloscStud_HQL = listaStudentow_HQL.size();
-	    	int iloscStud_JPQL= listaStudentow_JPQL.size();
+	    	int iloscStudHQL = listaStudentowHQL.size();
+	    	int iloscStudJPQL= listaStudentowJPQL.size();
     	//then
-	    	assertThat(iloscStud_HQL, Matchers.is(iloscStud_JPQL));
+	    	assertThat(iloscStudHQL, Matchers.is(iloscStudJPQL));
     }
     
     //ZADANIE - wypełnić
@@ -96,9 +99,28 @@ public class StudentTest {
     @Test
     public void sprawdzLiczbeStudentowPoNazwiskuCRITERIAvsHQL(){
     	//given
-    	//when
+    	//when    		
     	//then    	
     }
+    
+    //Testy na użycie filtrów Hibernate 
+    @Test
+    public void powinienZwrocicStudentowZNazwiskiemZawierajcymFragment(){
+    	//given
+    		List<Student> listaStudZFiltremNaNazwisko =
+    				repozytoriumStudentImpl.getStudenciZFiltorwanymNazwiskiem(FRAGMENT_NAZWISKA);
+    		List<Student> listaStudentowJPQLZFragmentemNazwiska  = 
+    				repozytoriumStudentImpl.getStudenciJPQLPoFragmencieNazwiska(FRAGMENT_NAZWISKA);
+    		
+    	//when
+    		int iloscStudOdfiltrowanych = listaStudZFiltremNaNazwisko.size();
+    		int iloscStudZFragmNazwiskaJPQL = listaStudentowJPQLZFragmentemNazwiska.size();
+    		
+    	//then		    		
+    		assertThat(iloscStudOdfiltrowanych, Matchers.is(iloscStudZFragmNazwiskaJPQL));
+    }
+    
+    // Test na użycie projekcji
     @Ignore
     @Test
     public void powinienZwrocicProjekcjaStudentowRosnacoPoNumerzeIndeksu(){

@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.Criteria;
+import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class RepozytoriumStudentImpl implements RepozytoriumStudent {
 	private static final String QUERY_STUDENT_LASTNAME = "SELECT s FROM Student s " +
-															"WHERE LOWER(s.nazwisko) = :nazwisko"; 
+															"WHERE LOWER(s.nazwisko) = :nazwisko";
+	private static final String QUERY_STUDENT_LIKE_LASTNAME = "FROM Student s " +
+															"WHERE LOWER(s.nazwisko) = %:nazwisko%";
+	
+	private static final String QUERY_STUDENT = "FROM Student";
+	
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -34,7 +40,7 @@ public class RepozytoriumStudentImpl implements RepozytoriumStudent {
     public List<Student> getStudenciPoNazwisku_HQL(String nazwisko) {
         Session session=entityManager.unwrap(Session.class);
         org.hibernate.Query query = session.createQuery(QUERY_STUDENT_LASTNAME);
-        query.setParameter("nazwisko", nazwisko);
+        query.setParameter("nazwisko", nazwisko.toLowerCase());
       
         return castList(Student.class, query.list()); //session close?
     }
@@ -42,7 +48,7 @@ public class RepozytoriumStudentImpl implements RepozytoriumStudent {
 	@Override
 	public List<Student> getStudenciPoNazwisku_JPQL(String nazwisko) {
 		 javax.persistence.Query query = entityManager.createQuery(QUERY_STUDENT_LASTNAME);
-		 query.setParameter("nazwisko", nazwisko); // jak sprwdzić LOWER?
+		 query.setParameter("nazwisko", nazwisko.toLowerCase()); 
 		 
 		return castList(Student.class, query.getResultList());
 	}
@@ -51,7 +57,7 @@ public class RepozytoriumStudentImpl implements RepozytoriumStudent {
 	public List<Student> getStudenciPoNazwisku_CRITERIA(String nazwisko) {
 		Session session=entityManager.unwrap(Session.class);
 		Criteria criteria = session.createCriteria(Student.class);
-		criteria.add(Restrictions.like("nazwisko",nazwisko));
+		criteria.add(Restrictions.like("nazwisko",nazwisko.toLowerCase()));
 		//return session.createCriteria(nu).uniqueResult();
 		return castList(Student.class, criteria.list());
 	}
@@ -60,4 +66,24 @@ public class RepozytoriumStudentImpl implements RepozytoriumStudent {
     public List<Student> getStudenciPoNazwiskuZaczynajacymSieOdLiter(String nazwisko) {
         return null;
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Student> getStudenciZFiltorwanymNazwiskiem(String fragmentNazwiska) {
+		Session session=entityManager.unwrap(Session.class);
+		
+		Filter filter = session.enableFilter("FILTER_TEST_STUDENT_NAZWISKO");
+		filter.setParameter("PARAM_student_Nazwisko",  fragmentNazwiska.toLowerCase());
+		
+		org.hibernate.Query query = session.createQuery(QUERY_STUDENT);
+		
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Student> getStudenciJPQLPoFragmencieNazwiska(String fragmentNazwiska){
+		 javax.persistence.Query query = entityManager.createQuery(QUERY_STUDENT_LIKE_LASTNAME);
+		 query.setParameter("nazwisko", fragmentNazwiska.toLowerCase());	
+		 return query.getResultList();
+	}
 }

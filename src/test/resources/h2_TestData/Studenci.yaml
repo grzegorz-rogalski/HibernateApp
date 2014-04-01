@@ -7,6 +7,11 @@
     nazwisko: Abramek
     wieczny: false
 
+- Student(adam1):
+    imie: Adam
+    nazwisko: Abramek1
+    wieczny: false
+    
 - Student(bartek):
     imie: Bartek
     nazwisko: Bielecki
