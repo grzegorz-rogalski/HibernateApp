@@ -5,7 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import javahive.domain.impl.RepozytoriumStudentImpl;
 import javahive.infrastruktura.Finder;
 
 import javax.inject.Inject;
@@ -30,14 +29,17 @@ public class StudentTest {
     public static final int LICZBA_STUDENTOW_W_YAML = 10;
     public static final String NAZWISKO = "Nowak";
     public static final String FRAGMENT_NAZWISKA = "a";
+    public static final int MIN_ID_VAL = 3;
+    public static final int LICZBA_STUDENTOW = 11;
     
     @PersistenceContext
     private EntityManager entityManager;
     @Inject
     Finder finder;
     @Inject
-    RepozytoriumStudentImpl repozytoriumStudentImpl;
+    RepozytoriumStudent repozytoriumStudentImpl;
     
+    @Ignore
     @Test
     public void powinienZwrocic10Studentow() {
         //given
@@ -75,7 +77,7 @@ public class StudentTest {
     
     //Testy porównujące JPQL/HQL/CRITERIA
     @Test
-    public void test_LiczStudPoNazwiskuJPQLvsHQL(){
+    public void sprawdzLiczStudPoNazwiskuJPQLvsHQL(){
     	//given
 	    	List<Student> listaStudentowHQL  = repozytoriumStudentImpl.getStudenciPoNazwisku_HQL(NAZWISKO);
 	    	List<Student> listaStudentowJPQL = repozytoriumStudentImpl.getStudenciPoNazwisku_JPQL(NAZWISKO);
@@ -104,6 +106,21 @@ public class StudentTest {
     }
     
     //Testy na użycie filtrów Hibernate 
+     
+    @Test
+    public void sprawdzLiczbeStudentowZWiekszymIDNizZadane(){
+    	//given
+    		List<Student> listaStudZIDPowyzejMin =
+    				repozytoriumStudentImpl.getStudenciZIDWiekszymNizDolnaWartosc(MIN_ID_VAL);
+    	//when
+    		int ile = listaStudZIDPowyzejMin.size();
+    		
+    	//then
+    		System.out.println("ok:"+listaStudZIDPowyzejMin.size());
+    		assertThat(ile, Matchers.is(8));		
+    }
+    
+    @Ignore
     @Test
     public void powinienZwrocicStudentowZNazwiskiemZawierajcymFragment(){
     	//given
@@ -120,7 +137,17 @@ public class StudentTest {
     		assertThat(iloscStudOdfiltrowanych, Matchers.is(iloscStudZFragmNazwiskaJPQL));
     }
     
-    // Test na użycie projekcji
+    // Test na użycie INTERFACEu projekcji z pakietu criteria
+    @Test
+    public void powinienProjekcjaZliczycStudentow(){
+    	//given
+    	List<Student> studenci = repozytoriumStudentImpl.getProjekcjaStudentowPoImieNazwisko();
+    	//when
+    	int liczbaStudentow = studenci.size();
+    	//then     
+    	assertThat(liczbaStudentow, Matchers.is(LICZBA_STUDENTOW));
+    }
+    
     @Ignore
     @Test
     public void powinienZwrocicProjekcjaStudentowRosnacoPoNumerzeIndeksu(){

@@ -13,6 +13,8 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.Criteria;
 import org.hibernate.Filter;
 import org.hibernate.Session;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
@@ -85,5 +87,36 @@ public class RepozytoriumStudentImpl implements RepozytoriumStudent {
 		 javax.persistence.Query query = entityManager.createQuery(QUERY_STUDENT_LIKE_LASTNAME);
 		 query.setParameter("nazwisko", fragmentNazwiska.toLowerCase());	
 		 return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Student> getStudenciZIDWiekszymNizDolnaWartosc(int minID) {
+		Session session=entityManager.unwrap(Session.class);
+		
+		Filter filter = session.enableFilter("FILTER_TEST_STUDENT_ID");
+		filter.setParameter("PARAM_student_ID",  minID);
+		
+		/*Filter filter = session.enableFilter("studentFilter");
+    	filter.setParameter("studentFilterID", minID);*/
+		
+		org.hibernate.Query query = session.createQuery(QUERY_STUDENT);
+		
+		return query.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Student> getProjekcjaStudentowPoImieNazwisko() {
+		Session session=entityManager.unwrap(Session.class);
+		Criteria criteria = session.createCriteria(Student.class);
+		
+		ProjectionList proList = Projections.projectionList();
+        proList.add(Projections.property("imie"));
+        proList.add(Projections.property("nazwisko"));
+        
+        criteria.setProjection(proList);
+		
+		return criteria.list();
 	}
 }

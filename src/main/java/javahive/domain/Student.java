@@ -28,15 +28,15 @@ import com.google.common.collect.Lists;
 	@FilterDef(	name="FILTER_TEST_STUDENT_NAZWISKO", 
 				parameters=@ParamDef( name="PARAM_student_Nazwisko", type="String" ) ),
 	@FilterDef(	name="FILTER_TEST_STUDENT_ID", 
-				parameters=@ParamDef( name="PARAM_student_ID", type="String" ) )
-				
+				parameters=@ParamDef( name="PARAM_student_ID", type="int" ) )
 })
+
 // Fitlry określają jaki ma zostać spełniony warunek na zadanych w definicji parametrach
 @Filters({
-
-	@Filter(name = "FILTER_TEST_STUDENT_NAZWISKO", condition = "lower(nazwisko) like %:PARAM_student_Nazwisko%"),
-	@Filter(name = "FILTER_TEST_STUDENT_ID", condition = "ID <= PARAM_student_ID")
+	@Filter(name = "FILTER_TEST_STUDENT_NAZWISKO", condition = "lower(nazwisko) like :PARAM_student_Nazwisko"),
+	@Filter(name = "FILTER_TEST_STUDENT_ID", condition = "id > :PARAM_student_ID")
 })
+
 
 public class Student extends BaseEntity {
 	public Student(){};
