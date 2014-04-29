@@ -9,7 +9,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class Finder{
@@ -24,7 +23,6 @@ public class Finder{
 		CriteriaQuery<T> criteria = builder.createQuery(c);
 		Root<T> entityRoot = criteria.from(c);
 		criteria.select(entityRoot);
-		//criteria.where( builder.equal( personRoot.get( Student.eyeColor ), "brown" ) );
 		List<T> entities = entityManager.createQuery( criteria ).getResultList();
 		return entities;
 	}

@@ -5,7 +5,6 @@ import javahive.infrastruktura.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
