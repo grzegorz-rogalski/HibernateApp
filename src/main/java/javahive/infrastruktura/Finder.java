@@ -23,7 +23,6 @@ public class Finder{
 		CriteriaQuery<T> criteria = builder.createQuery(c);
 		Root<T> entityRoot = criteria.from(c);
 		criteria.select(entityRoot);
-		//criteria.where( builder.equal( personRoot.get( Student.eyeColor ), "brown" ) );
 		List<T> entities = entityManager.createQuery( criteria ).getResultList();
 		return entities;
 	}

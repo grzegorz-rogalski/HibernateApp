@@ -5,6 +5,7 @@ import java.util.List;
 import javahive.infrastruktura.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -43,7 +44,7 @@ public class Student extends BaseEntity {
 	private String imie;
 	private String nazwisko;
 	private boolean wieczny;
-	//@OneToMany(mappedBy="student",fetch=FetchType.EAGER)
+	//@OneToMany(mappedBy="student",fetch= FetchType.EAGER)
     @OneToMany
 	private List<Ocena> oceny=Lists.newArrayList();
     @OneToOne

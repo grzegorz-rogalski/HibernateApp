@@ -175,9 +175,5 @@ public class StudentTest {
         System.out.println(indeksy.size());
     }
 
-    @Test
-    public void powinnoApiZwaracacStudentow() {
-        assertThat(studenciApi.getListaWszystkichStudentow().size(),is(11));
-    }
 
 }
