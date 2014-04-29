@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import javahive.api.StudenciApi;
 import javahive.infrastruktura.Finder;
 
 import javax.inject.Inject;
@@ -35,9 +36,11 @@ public class StudentTest {
     @PersistenceContext
     private EntityManager entityManager;
     @Inject
-    Finder finder;
+    private Finder finder;
     @Inject
-    RepozytoriumStudent repozytoriumStudentImpl;
+    private RepozytoriumStudent repozytoriumStudentImpl;
+    @Inject
+    private StudenciApi studenciApi;
     
     @Ignore
     @Test
@@ -171,6 +174,10 @@ public class StudentTest {
         List<Indeks> indeksy = finder.findAll(Indeks.class);
         System.out.println(indeksy.size());
     }
-    
+
+    @Test
+    public void powinnoApiZwaracacStudentow() {
+        assertThat(studenciApi.getListaWszystkichStudentow().size(),is(11));
+    }
 
 }
