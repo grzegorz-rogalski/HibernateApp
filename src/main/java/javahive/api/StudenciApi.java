@@ -30,7 +30,6 @@ public class StudenciApi {
             if(student.getIndeks()!=null){
                 studentDTO.setNumerIndeksu(student.getIndeks().getNumer());
             }
-            System.out.println(studentDTO);
             studentciDTO.add(studentDTO);
         }
         return studentciDTO;
